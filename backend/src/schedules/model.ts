@@ -1,10 +1,11 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+ import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface ScheduleDocument extends Document {
-  userId: string; // Clerk user id
-  therapistId: string;
+  patientId: string; // Clerk user id
+  doctorId: string;
   startTime: Date;
   endTime: Date;
+  therapyType: string;
   notes?: string;
   status: 'scheduled' | 'cancelled' | 'completed';
   createdAt: Date;
@@ -13,10 +14,15 @@ export interface ScheduleDocument extends Document {
 
 const scheduleSchema = new Schema<ScheduleDocument>(
   {
-    userId: { type: String, required: true, index: true },
-    therapistId: { type: String, required: true, index: true },
+    patientId: { type: String, required: true, index: true },
+    doctorId: { type: String, required: true, index: true },
     startTime: { type: Date, required: true },
     endTime: { type: Date, required: true },
+    therapyType: { 
+      type: String, 
+      required: true,
+      enum: ['Abhyanga', 'Shirodhara', 'Nasya', 'Basti', 'Swedana', 'Panchakarma']
+    },
     notes: { type: String },
     status: {
       type: String,

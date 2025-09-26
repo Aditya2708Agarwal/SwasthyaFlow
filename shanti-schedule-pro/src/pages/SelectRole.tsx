@@ -2,29 +2,68 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SignedIn, SignedOut, RedirectToSignIn, useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
 import { Stethoscope, UserRound, Activity } from "lucide-react";
+import { useApi } from "@/lib/api";
 
 export default function SelectRole() {
   const { user } = useUser();
+  const { request } = useApi();
   const navigate = useNavigate();
   const [isSaving, setIsSaving] = useState(false);
+  const [existingRole, setExistingRole] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function checkRole() {
+      try {
+        const { role } = await request<{ role: string | null }>('/api/users/me');
+        setExistingRole(role);
+        if (role) {
+          navigate(role === "doctor" ? "/doctor" : "/patient", { replace: true });
+        }
+      } catch (err) {
+        console.error('Error checking role:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    if (user) {
+      checkRole();
+    }
+  }, [user]);
 
   async function setRole(role: "patient" | "doctor") {
     if (!user) return;
     try {
       setIsSaving(true);
-      // Fallback to unsafeMetadata for simpler typing in this demo
-      await user.update({ unsafeMetadata: { ...(user.unsafeMetadata || {}), role } as any });
-      // Ensure the latest metadata is in the session
+      await request("/api/users/role", {
+        method: "POST",
+        body: JSON.stringify({ role })
+      });
+      
+      // Reload user data to get updated metadata
       await user.reload();
       navigate(role === "doctor" ? "/doctor" : "/patient", { replace: true });
     } catch (err) {
-      toast({ title: "Could not set role", description: "Please try again.", variant: "destructive" });
+      console.error('Role setting error:', err);
+      toast({ 
+        title: "Could not set role", 
+        description: err instanceof Error ? err.message : "Please try again later.", 
+        variant: "destructive" 
+      });
     } finally {
       setIsSaving(false);
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 text-foreground flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   return (
@@ -36,7 +75,7 @@ export default function SelectRole() {
         <div className="w-full max-w-4xl">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-600/10 text-emerald-700 mb-3">
-            <Activity className="h-10 w-10 text-primary-foreground text-green-700" />
+              <Activity className="h-10 w-10 text-primary-foreground text-green-700" />
             </div>
             <div className="text-sm text-muted-foreground">SwasthyaFlow</div>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight">Who are you?</h1>

@@ -35,10 +35,15 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const scheduleSchema = new mongoose_1.Schema({
-    userId: { type: String, required: true, index: true },
-    therapistId: { type: String, required: true, index: true },
+    patientId: { type: String, required: true, index: true },
+    doctorId: { type: String, required: true, index: true },
     startTime: { type: Date, required: true },
     endTime: { type: Date, required: true },
+    therapyType: {
+        type: String,
+        required: true,
+        enum: ['Abhyanga', 'Shirodhara', 'Nasya', 'Basti', 'Swedana', 'Panchakarma']
+    },
     notes: { type: String },
     status: {
         type: String,

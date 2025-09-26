@@ -12,7 +12,7 @@ import {
   CheckCircle,
   AlertCircle
 } from 'lucide-react';
-import dashboardPreview from '@/assets/dashboard-preview.jpg';
+import RecoveryChart from './RecoveryChart';
 
 const Dashboard = () => {
   const upcomingSessions = [
@@ -151,46 +151,86 @@ const Dashboard = () => {
                 </div>
               </CardContent>
             </Card>
+          </div>
 
-            {/* Dashboard Preview Image */}
-            <Card className="border-border bg-card overflow-hidden">
+          {/* Full Width Analytics & Insights */}
+          <div className="col-span-full mt-6">
+            <Card className="border-border bg-card">
               <CardHeader>
-                <CardTitle className="text-foreground">Analytics & Insights</CardTitle>
-                <CardDescription>
-                  Comprehensive therapy tracking and patient progress visualization
+                <CardTitle className="text-foreground text-2xl">Analytics & Insights</CardTitle>
+                <CardDescription className="text-lg">
+                  Real-time therapy tracking and patient progress visualization
                 </CardDescription>
               </CardHeader>
-              <CardContent className="p-0">
-                <img 
-                  src={dashboardPreview} 
-                  alt="Dashboard analytics and insights preview"
-                  className="w-full h-auto"
-                />
+              <CardContent>
+                <div className="grid md:grid-cols-2 gap-8">
+                  {/* Weekly Progress Chart */}
+                  <div>
+                    <h4 className="text-lg font-semibold mb-4">Weekly Progress Overview</h4>
+                    <div className="h-[400px]">
+                      <RecoveryChart />
+                    </div>
+                  </div>
+                  {/* Treatment Success Rate */}
+                  <div>
+                    <h4 className="text-lg font-semibold mb-4">Treatment Success Metrics</h4>
+                    <div className="space-y-6">
+                      <div>
+                        <div className="flex justify-between text-base mb-2">
+                          <span>Abhyanga Success Rate</span>
+                          <span className="text-success font-semibold">92%</span>
+                        </div>
+                        <Progress value={92} className="h-3" />
+                      </div>
+                      <div>
+                        <div className="flex justify-between text-base mb-2">
+                          <span>Shirodhara Success Rate</span>
+                          <span className="text-success font-semibold">88%</span>
+                        </div>
+                        <Progress value={88} className="h-3" />
+                      </div>
+                      <div>
+                        <div className="flex justify-between text-base mb-2">
+                          <span>Swedana Success Rate</span>
+                          <span className="text-success font-semibold">95%</span>
+                        </div>
+                        <Progress value={95} className="h-3" />
+                      </div>
+                      <div>
+                        <div className="flex justify-between text-base mb-2">
+                          <span>Overall Recovery Rate</span>
+                          <span className="text-success font-semibold">91.6%</span>
+                        </div>
+                        <Progress value={91.6} className="h-3" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
+          {/* Actions and Activity Row */}
+          <div className="col-span-full grid grid-cols-3 gap-6 mb-6">
             {/* Quick Actions */}
             <Card className="border-border bg-card">
-              <CardHeader>
+              <CardHeader className="pb-3">
                 <CardTitle className="text-foreground">Quick Actions</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <Button className="w-full bg-gradient-primary justify-start">
+              <CardContent className="grid grid-cols-2 gap-2">
+                <Button className="bg-gradient-primary justify-start">
                   <Calendar className="h-4 w-4 mr-2" />
                   Schedule Session
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="outline" className="justify-start">
                   <Users className="h-4 w-4 mr-2" />
                   Add Patient
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="outline" className="justify-start">
                   <Bell className="h-4 w-4 mr-2" />
                   Send Notification
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="outline" className="justify-start">
                   <Activity className="h-4 w-4 mr-2" />
                   View Reports
                 </Button>
@@ -199,11 +239,11 @@ const Dashboard = () => {
 
             {/* Recent Activity */}
             <Card className="border-border bg-card">
-              <CardHeader>
+              <CardHeader className="pb-3">
                 <CardTitle className="text-foreground">Recent Activity</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {recentNotifications.map((notification, index) => (
                     <div key={index} className="flex items-start space-x-3">
                       <div className={`w-2 h-2 rounded-full mt-2 ${
@@ -221,10 +261,10 @@ const Dashboard = () => {
 
             {/* Patient Progress */}
             <Card className="border-border bg-card">
-              <CardHeader>
+              <CardHeader className="pb-3">
                 <CardTitle className="text-foreground">Patient Progress</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-3">
                 <div>
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-foreground">Priya Sharma</span>

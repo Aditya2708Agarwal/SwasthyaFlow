@@ -2,10 +2,12 @@ import { Router, Request } from 'express';
 import { body, param, validationResult } from 'express-validator';
 import Schedule from './model';
 import { getUserId } from '../auth';
+import { requireRole } from '../middleware/role';
 
 const router = Router();
 
-router.get('/', async (req: Request, res) => {
+// Patient view: schedules where current user is the patient
+router.get('/', requireRole('patient'), async (req: Request, res) => {
   try {
     const userId = getUserId(req);
     const items = await Schedule.find({ userId }).sort({ startTime: 1 }).lean();
@@ -16,7 +18,7 @@ router.get('/', async (req: Request, res) => {
 });
 
 // Doctor view: schedules where current user is the therapist
-router.get('/for-doctor', async (req: Request, res) => {
+router.get('/for-doctor', requireRole('doctor'), async (req: Request, res) => {
   try {
     const therapistId = getUserId(req);
     const items = await Schedule.find({ therapistId }).sort({ startTime: 1 }).lean();
@@ -32,6 +34,7 @@ router.post(
   body('startTime').isISO8601(),
   body('endTime').isISO8601(),
   body('notes').optional().isString(),
+  requireRole('patient'),
   async (req: Request, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
@@ -55,6 +58,7 @@ router.post(
 router.post(
   '/:id/cancel',
   param('id').isMongoId(),
+  requireRole('patient'),
   async (req: Request, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
@@ -78,6 +82,7 @@ router.post(
 router.post(
   '/:id/complete',
   param('id').isMongoId(),
+  requireRole('doctor'),
   async (req: Request, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
