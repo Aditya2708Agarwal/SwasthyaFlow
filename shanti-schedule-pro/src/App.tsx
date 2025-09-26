@@ -11,6 +11,7 @@ import SelectRole from "./pages/SelectRole";
 import RoleRoute from "./components/RoleRoute";
 import NotFound from "./pages/NotFound";
 import AIChatbot from "./components/AIChatbot";
+import Contact from "./pages/Contact";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/patient" element={<PatientDashboard />} />
             <Route path="/doctor" element={<DoctorDashboard />} />
           </Route>
+          <Route path="/contact" element={<Contact />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

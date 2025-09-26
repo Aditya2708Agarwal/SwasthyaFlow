@@ -78,9 +78,12 @@ const Header = () => {
                 Contact
               </span>
             ) : (
-              <a href="#contact" className="text-foreground hover:text-primary transition-colors">
+              <Link
+                to="/contact"
+                className="text-foreground hover:text-primary transition-colors"
+              >
                 Contact
-              </a>
+              </Link>
             )}
           </nav>
 
@@ -155,13 +158,13 @@ const Header = () => {
                   Contact
                 </span>
               ) : (
-                <a
-                  href="#contact"
+                <Link
+                  to="/contact"
                   className="block px-3 py-2 text-foreground hover:text-primary transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Contact
-                </a>
+                </Link>
               )}
               <div className="flex flex-col space-y-2 px-3 pt-2">
                 <SignedOut>
